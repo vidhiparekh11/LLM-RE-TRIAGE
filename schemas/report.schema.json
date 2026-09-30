@@ -1,0 +1,249 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/retriage/report.schema.json",
+  "title": "retriage triage report v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "sample",
+    "verdict",
+    "summary",
+    "behaviors",
+    "iocs",
+    "obfuscation",
+    "limitations",
+    "recommendations",
+    "analysis"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0"
+    },
+    "sample": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "sha256",
+        "md5",
+        "sha1",
+        "size"
+      ],
+      "properties": {
+        "sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "md5": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{32}$"
+        },
+        "sha1": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{40}$"
+        },
+        "size": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "format": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "arch": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "bits": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        }
+      }
+    },
+    "verdict": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "classification",
+        "confidence",
+        "risk"
+      ],
+      "properties": {
+        "classification": {
+          "enum": [
+            "malicious",
+            "suspicious",
+            "benign",
+            "unknown"
+          ]
+        },
+        "confidence": {
+          "enum": [
+            "low",
+            "medium",
+            "high"
+          ]
+        },
+        "risk": {
+          "enum": [
+            "critical",
+            "high",
+            "medium",
+            "low",
+            "unrated"
+          ]
+        }
+      }
+    },
+    "summary": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 2000
+    },
+    "behaviors": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "behavior",
+          "evidence",
+          "confidence"
+        ],
+        "properties": {
+          "behavior": {
+            "type": "string"
+          },
+          "evidence": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "minItems": 1
+          },
+          "function": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "attack_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^T[0-9]{4}(\\.[0-9]{3})?$"
+          },
+          "confidence": {
+            "enum": [
+              "low",
+              "medium",
+              "high"
+            ]
+          }
+        }
+      }
+    },
+    "iocs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "type",
+          "value"
+        ],
+        "properties": {
+          "type": {
+            "enum": [
+              "ip",
+              "domain",
+              "url",
+              "email",
+              "registry_key",
+              "mutex",
+              "file_path",
+              "hash",
+              "other"
+            ]
+          },
+          "value": {
+            "type": "string",
+            "minLength": 1
+          },
+          "context": {
+            "type": "string"
+          },
+          "grounded": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    "obfuscation": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "limitations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1
+    },
+    "recommendations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "analysis": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "tool",
+        "backend",
+        "llm",
+        "steps",
+        "tool_calls"
+      ],
+      "properties": {
+        "tool": {
+          "type": "string"
+        },
+        "backend": {
+          "type": "string"
+        },
+        "llm": {
+          "type": "string"
+        },
+        "steps": {
+          "type": "integer"
+        },
+        "tool_calls": {
+          "type": "integer"
+        },
+        "renamed_functions": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "ungrounded_iocs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

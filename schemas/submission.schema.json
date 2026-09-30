@@ -1,0 +1,157 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/retriage/report.schema.json",
+  "title": "retriage report submission (model-supplied fields)",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "verdict",
+    "summary",
+    "behaviors",
+    "iocs",
+    "obfuscation",
+    "limitations",
+    "recommendations"
+  ],
+  "properties": {
+    "verdict": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "classification",
+        "confidence",
+        "risk"
+      ],
+      "properties": {
+        "classification": {
+          "enum": [
+            "malicious",
+            "suspicious",
+            "benign",
+            "unknown"
+          ]
+        },
+        "confidence": {
+          "enum": [
+            "low",
+            "medium",
+            "high"
+          ]
+        },
+        "risk": {
+          "enum": [
+            "critical",
+            "high",
+            "medium",
+            "low",
+            "unrated"
+          ]
+        }
+      }
+    },
+    "summary": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 2000
+    },
+    "behaviors": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "behavior",
+          "evidence",
+          "confidence"
+        ],
+        "properties": {
+          "behavior": {
+            "type": "string"
+          },
+          "evidence": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "minItems": 1
+          },
+          "function": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "attack_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^T[0-9]{4}(\\.[0-9]{3})?$"
+          },
+          "confidence": {
+            "enum": [
+              "low",
+              "medium",
+              "high"
+            ]
+          }
+        }
+      }
+    },
+    "iocs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "type",
+          "value"
+        ],
+        "properties": {
+          "type": {
+            "enum": [
+              "ip",
+              "domain",
+              "url",
+              "email",
+              "registry_key",
+              "mutex",
+              "file_path",
+              "hash",
+              "other"
+            ]
+          },
+          "value": {
+            "type": "string",
+            "minLength": 1
+          },
+          "context": {
+            "type": "string"
+          },
+          "grounded": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    "obfuscation": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "limitations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1
+    },
+    "recommendations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}
