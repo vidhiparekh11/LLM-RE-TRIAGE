@@ -1,0 +1,24 @@
+/* Benign demo target for llm-re-triage. It decodes an XOR-obfuscated URL-like string and
+ * prints a fake HTTP request to stdout. It performs NO network activity. */
+#include <stdio.h>
+#include <string.h>
+
+static const unsigned char ENC[] = { @ENC_BYTES@ };
+
+static void xor_dec(unsigned char *buf, size_t n, unsigned char key) {
+    for (size_t i = 0; i < n; i++) buf[i] ^= key;
+}
+
+static void build_request(const char *url, char *out, size_t cap) {
+    snprintf(out, cap, "GET %s HTTP/1.1\r\nUser-Agent: demo-agent/1.0\r\n\r\n", url);
+}
+
+int main(void) {
+    unsigned char url[sizeof ENC];
+    char req[256];
+    memcpy(url, ENC, sizeof ENC);
+    xor_dec(url, sizeof ENC - 1, @KEY@);
+    build_request((const char *)url, req, sizeof req);
+    puts(req);
+    return 0;
+}
